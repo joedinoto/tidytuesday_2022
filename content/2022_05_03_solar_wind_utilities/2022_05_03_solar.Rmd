@@ -5,7 +5,6 @@ output:
     toc: yes
     keep_md: yes
     fig_caption: yes
-
 ---
 
 This is the May 3rd 2022 tidytuesday dataset exploration about solar power. My first tidytuesday since August 31 2021. 
@@ -23,5 +22,27 @@ solar <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidy
 average_cost <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-05-03/average_cost.csv')
 ```
 
+## Explore the data
+```{r}
+# super basic line plot
+average_cost %>%
+  ggplot(aes(year,gas_mwh)) +
+  geom_line()
+```
+```{r}
+# We're going to have to reshape the data
+average_cost
+```
+
+```{r}
+average_cost %>%
+  pivot_longer(
+    cols = gas_mwh:wind_mwh, 
+    names_to = "type", 
+    values_to = "sourced_dollars_per_MWh",
+    values_drop_na = TRUE) %>%
+  ggplot(aes(year,sourced_dollars_per_MWh, color=type))+
+  geom_line()
+```
 
 

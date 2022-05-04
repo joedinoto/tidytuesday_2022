@@ -109,3 +109,33 @@ average_cost_long%>%
   labs(color="fuel type")+
   theme_light()
 ```
+## Explore the other data sets
+
+Starting with capacity, units are in gigawatts:
+
+```{r}
+capacity
+```
+
+Again, the data must be reshaped.
+```{r}
+capacity_long <- capacity %>%
+  pivot_longer(
+    cols=standalone_prior:hybrid_new,
+    names_to = "category",
+    values_to = "gigawatts",
+    values_drop_na = TRUE)
+
+capacity_long
+```
+
+Now a quick plot, which shows that `standalone_prior` has grown while `hybrid_new` and `hybrid_prior` have increased since 2017. 
+
+```{r}
+capacity_long %>%
+  ggplot(aes(x=year,y=gigawatts,fill=category))+
+  geom_bar(position = 'dodge',stat = 'identity')
+```
+
+Now let's do a side-by-side split multiple, split on new and prior.
+

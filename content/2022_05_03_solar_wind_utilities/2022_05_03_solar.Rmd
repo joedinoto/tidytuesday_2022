@@ -139,3 +139,19 @@ capacity_long %>%
 
 Now let's do a side-by-side split multiple, split on new and prior.
 
+```{r}
+#separate(mytext, sep = " ", into = colnm, remove = FALSE)
+
+capacity_long_sep<- capacity_long %>%
+  separate(category,sep="_",into = c("type","time"), remove = TRUE)
+
+capacity_long_sep
+```
+
+```{r}
+capacity_long_sep %>%
+  ggplot(aes(x=year,y=gigawatts,fill=type))+
+  geom_bar(position = 'dodge',stat = 'identity')+
+  facet_wrap(~time)
+```
+

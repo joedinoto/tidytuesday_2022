@@ -155,3 +155,66 @@ capacity_long_sep %>%
   facet_wrap(~time)
 ```
 
+```{r}
+solar
+```
+
+A simple line graph of date and the estimated cost of megawatt per hour for solar.
+
+```{r}
+solar %>%
+  ggplot(aes(date,solar_mwh)) +
+  geom_line()
+```
+
+This data may lead itself better to dots instead.
+
+```{r}
+solar %>%
+  ggplot(aes(date,solar_mwh)) +
+  geom_point()
+```
+
+Visualizing solar capacity on the above graph as the size of the dot.
+
+```{r}
+solar %>%
+  ggplot(aes(date,solar_mwh)) +
+  geom_point(aes(size=solar_capacity))
+```
+
+Some color now.
+
+```{r}
+solar %>%
+  ggplot(aes(date,solar_mwh)) +
+  geom_point(aes(size=solar_capacity, color=solar_capacity))
+```
+
+Too much overlap, so make the dots transparent.
+
+```{r}
+solar %>%
+  ggplot(aes(date,solar_mwh)) +
+  geom_point(aes(size=solar_capacity, color=solar_capacity, alpha=.5))+
+  geom_smooth(method=loess)
+```
+
+Change that moving average line to another color.
+
+```{r}
+solar %>%
+  ggplot(aes(date,solar_mwh)) +
+  geom_point(aes(size=solar_capacity, color=solar_capacity, alpha=.5))+
+  geom_smooth(method=loess,color="green", fill="red")
+```
+
+
+```{r}
+library(lubridate)
+solar %>%
+  mutate(year=year(solar$date))%>%
+  ggplot(aes(solar_mwh,solar_capacity))+
+  geom_point(aes(alpha=.5))
+```
+

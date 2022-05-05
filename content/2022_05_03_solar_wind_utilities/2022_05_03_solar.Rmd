@@ -299,4 +299,20 @@ wind_and_solar_long_sep %>%
   geom_point(aes(color=`power source`))+
   facet_wrap(~type)
 ```
+```{r}
+wind_and_solar_long_sep %>%
+  filter(type=="mwh") %>%
+  ggplot(aes(date,value, color=`power source`))+
+  geom_point(aes(alpha=.5))+
+  geom_smooth()
+```
+
+```{r}
+wind_and_solar_long_sep %>%
+  filter(type=="mwh") %>%
+  ggplot(aes(date,value, color=`power source`))+
+  geom_point(aes(alpha=.5))+
+  geom_smooth()
+```
+
 

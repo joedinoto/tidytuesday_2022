@@ -321,4 +321,21 @@ wind_and_solar_long_sep %>%
   theme(legend.position="top")
 ```
 
+Aggregate the above plot by year. 
+
+```{r}
+wind_and_solar_long_sep %>%
+  filter(type=="mwh") %>%
+  mutate(year = year(date)) %>%
+  mutate(month = month(date)) %>%
+  ggplot(aes(x=year, y = value))+
+  geom_boxplot(
+    aes(group = cut_width(year,1)),
+        outlier.alpha=.5)+
+  facet_grid(~`power source`)+
+  scale_y_continuous(
+    labels=scales::dollar_format()
+    )+
+  geom_smooth(alpha=.2)
+```
 

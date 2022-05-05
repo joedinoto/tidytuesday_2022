@@ -311,8 +311,14 @@ wind_and_solar_long_sep %>%
 wind_and_solar_long_sep %>%
   filter(type=="mwh") %>%
   ggplot(aes(date,value, color=`power source`))+
-  geom_point(aes(alpha=.5))+
-  geom_smooth()
+  geom_point()+
+  geom_smooth(method=`loess`)+
+  scale_y_continuous(labels=scales::dollar_format())+
+  ggtitle("Cost $ per MWh")+
+  xlab("")+
+  ylab("")+
+  theme_light()+
+  theme(legend.position="top")
 ```
 
 

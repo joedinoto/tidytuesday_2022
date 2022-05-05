@@ -16,6 +16,7 @@ This is the May 3rd 2022 tidytuesday dataset exploration about solar power. It i
 #load libraries
 library(tidytuesdayR)
 library(tidyverse)
+library(lubridate)
 
 # get the data
 capacity <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-05-03/capacity.csv')
@@ -140,7 +141,7 @@ capacity_long %>%
 Now let's do a side-by-side split multiple, split on new and prior.
 
 ```{r}
-#separate(mytext, sep = " ", into = colnm, remove = FALSE)
+#separate(mytext, sep = " ", into = c("col1","col2"), remove = FALSE)
 
 capacity_long_sep<- capacity_long %>%
   separate(category,sep="_",into = c("type","time"), remove = TRUE)
@@ -200,7 +201,7 @@ solar %>%
   geom_smooth(method=loess)
 ```
 
-Change that moving average line to another color.
+Change that moving average line to another color for fun.
 
 ```{r}
 solar %>%
@@ -209,12 +210,93 @@ solar %>%
   geom_smooth(method=loess,color="green", fill="red")
 ```
 
+That's a but too much, but it looks cool. 
+
 
 ```{r}
-library(lubridate)
 solar %>%
   mutate(year=year(solar$date))%>%
   ggplot(aes(solar_mwh,solar_capacity))+
   geom_point(aes(alpha=.5))
+```
+Take the nice dot plot with trendline (minus the colorful red trendline) and apply that to the wind dataset.
+
+```{r}
+wind %>%
+  ggplot(aes(date,wind_mwh)) +
+  geom_point(aes(size=wind_capacity, color=wind_capacity, alpha=.5))+
+  geom_smooth(method=loess)
+```
+
+There must be a way to combine the `wind` and `solar` datasets.
+
+```{r}
+solar
+```
+
+```{r}
+wind
+```
+
+The dates don't match 1 to 1. Make them both long tables and then merge on dates. 
+
+```{r}
+wind_long <- wind %>%
+  pivot_longer(
+    cols = wind_mwh:wind_capacity,
+    names_to = "category",
+    values_to = "value",
+    values_drop_na = TRUE
+  )
+
+wind_long
+```
+
+```{r}
+solar_long <- solar %>%
+  pivot_longer(
+    cols = solar_mwh:solar_capacity,
+    names_to = "category",
+    values_to = "value",
+    values_drop_na = TRUE
+  )
+
+solar_long
+```
+
+```{r}
+wind_and_solar_long <- bind_rows(wind_long,solar_long)
+
+wind_and_solar_long
+```
+
+
+```{r}
+wind_and_solar_long %>%
+  ggplot(aes(date,value)) +
+  geom_point(aes(color=category, alpha=.5))+
+  geom_smooth(method=loess)
+```
+
+Nope, we need to split up category.
+
+```{r}
+#separate(coltosplitgoeshere, sep = " ", into = c("col1","col2",...,"coln"), remove = TRUE)
+
+wind_and_solar_long_sep <- wind_and_solar_long %>%
+  separate(category,
+           sep="_",
+           into= c("power source","type"),
+           remove=TRUE
+           )
+
+wind_and_solar_long_sep
+```
+
+```{r}
+wind_and_solar_long_sep %>%
+  ggplot(aes(date,value))+
+  geom_point(aes(color=`power source`))+
+  facet_wrap(~type)
 ```
 

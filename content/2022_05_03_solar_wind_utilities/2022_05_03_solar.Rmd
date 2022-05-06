@@ -7,11 +7,14 @@ output:
     fig_caption: yes
 ---
 
-## intro
+# intro
 
 This is the May 3rd 2022 tidytuesday dataset exploration about solar power. It is my first tidytuesday since August 31 2021. I will start small by walking through some elementary steps using `R`. 
 
-## Load libraries, get data 
+# Load libraries, get data 
+
+This is how most data explorations begin
+
 ```{r setup, error=FALSE, warning=FALSE, message=FALSE}
 #load libraries
 library(tidytuesdayR)
@@ -159,7 +162,11 @@ capacity_long_sep %>%
   geom_bar(position = 'dodge',stat = 'identity')+
   facet_wrap(~time)
 ```
+
 ### solar
+
+This is similar to the `wind` data.
+
 ```{r}
 solar
 ```
@@ -195,6 +202,7 @@ solar %>%
   ggplot(aes(date,solar_mwh)) +
   geom_point(aes(size=solar_capacity, color=solar_capacity))
 ```
+
 ### satisfactory plot 
 
 Too much overlap, so make the dots transparent.
@@ -205,7 +213,9 @@ solar %>%
   geom_point(aes(size=solar_capacity, color=solar_capacity, alpha=.5))+
   geom_smooth(method=loess)
 ```
+
 ### taking it a bit too far
+
 Change that moving average line to another color for fun.
 
 ```{r}
@@ -219,13 +229,17 @@ That's a but too much, but it looks cool.
 
 ### misc - will explore this later or discard?
 
+Probably going to discard it?
+
 ```{r}
 solar %>%
   mutate(year=year(solar$date))%>%
   ggplot(aes(solar_mwh,solar_capacity))+
   geom_point(aes(alpha=.5))
 ```
+
 ### wind 
+
 Take the nice dot plot with trendline (minus the colorful red trendline) and apply that to the wind dataset.
 
 ```{r}
@@ -246,6 +260,7 @@ wind
 ```
 
 ### Merge Wind and Solar Data
+
 The dates don't match 1 to 1. Make them both long tables and then merge on dates. 
 
 ```{r}
@@ -303,6 +318,7 @@ wind_and_solar_long_sep
 ```
 
 ### conclusions 
+
 It appears at the capacity increases over tie and costs per megawatt hour decrease with time. 
 
 ```{r}
@@ -311,6 +327,7 @@ wind_and_solar_long_sep %>%
   geom_point(aes(color=`power source`))+
   facet_wrap(~type)
 ```
+
 ### cost per megawatt hour for wind and solar
 
 todo - add label and title, also add a plot like this for capcity
@@ -338,6 +355,7 @@ wind_and_solar_long_sep %>%
   theme_light()+
   theme(legend.position="top")
 ```
+
 ### aggregate 
 
 Aggregate the above plot by year. 

@@ -91,6 +91,8 @@ average_cost_long%>%
         )+
   labs(color="fuel type")
 ```
+### satisfactory plot 
+
 Remove the gray background, add a marker for every year, and make the major y axis interval 25 with minor 5.
 
 ```{r}
@@ -111,6 +113,8 @@ average_cost_long%>%
   theme_light()
 ```
 ## Explore the other data sets
+
+### capcity 
 
 Starting with capacity, units are in gigawatts:
 
@@ -155,7 +159,7 @@ capacity_long_sep %>%
   geom_bar(position = 'dodge',stat = 'identity')+
   facet_wrap(~time)
 ```
-
+### solar
 ```{r}
 solar
 ```
@@ -191,6 +195,7 @@ solar %>%
   ggplot(aes(date,solar_mwh)) +
   geom_point(aes(size=solar_capacity, color=solar_capacity))
 ```
+### satisfactory plot 
 
 Too much overlap, so make the dots transparent.
 
@@ -200,7 +205,7 @@ solar %>%
   geom_point(aes(size=solar_capacity, color=solar_capacity, alpha=.5))+
   geom_smooth(method=loess)
 ```
-
+### taking it a bit too far
 Change that moving average line to another color for fun.
 
 ```{r}
@@ -212,6 +217,7 @@ solar %>%
 
 That's a but too much, but it looks cool. 
 
+### misc - will explore this later or discard?
 
 ```{r}
 solar %>%
@@ -219,6 +225,7 @@ solar %>%
   ggplot(aes(solar_mwh,solar_capacity))+
   geom_point(aes(alpha=.5))
 ```
+### wind 
 Take the nice dot plot with trendline (minus the colorful red trendline) and apply that to the wind dataset.
 
 ```{r}
@@ -238,6 +245,7 @@ solar
 wind
 ```
 
+### Merge Wind and Solar Data
 The dates don't match 1 to 1. Make them both long tables and then merge on dates. 
 
 ```{r}
@@ -270,6 +278,7 @@ wind_and_solar_long <- bind_rows(wind_long,solar_long)
 wind_and_solar_long
 ```
 
+Too much information on one plot, it's pretty but ultimately nonsense. 
 
 ```{r}
 wind_and_solar_long %>%
@@ -293,12 +302,19 @@ wind_and_solar_long_sep <- wind_and_solar_long %>%
 wind_and_solar_long_sep
 ```
 
+### conclusions 
+It appears at the capacity increases over tie and costs per megawatt hour decrease with time. 
+
 ```{r}
 wind_and_solar_long_sep %>%
   ggplot(aes(date,value))+
   geom_point(aes(color=`power source`))+
   facet_wrap(~type)
 ```
+### cost per megawatt hour for wind and solar
+
+todo - add label and title, also add a plot like this for capcity
+
 ```{r}
 wind_and_solar_long_sep %>%
   filter(type=="mwh") %>%
@@ -306,6 +322,8 @@ wind_and_solar_long_sep %>%
   geom_point(aes(alpha=.5))+
   geom_smooth()
 ```
+
+### satisfactory plot
 
 ```{r}
 wind_and_solar_long_sep %>%
@@ -320,6 +338,7 @@ wind_and_solar_long_sep %>%
   theme_light()+
   theme(legend.position="top")
 ```
+### aggregate 
 
 Aggregate the above plot by year. 
 
